@@ -1,172 +1,151 @@
 [
   {
-    "num_groups": 900,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_20.jsonl",
-    "resolution": "720p",
+    "num_groups": 112,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_5.jsonl",
+    "resolution": "360p",
     "prefix_start": 0,
-    "prefix_end": 1800,
-    "var_start": 1800,
-    "var_end": 5400,
-    "max_tokens": 50,
+    "prefix_end": 450,
+    "var_start": 450,
+    "var_end": 900,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 225,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_10.jsonl",
+    "resolution": "360p",
+    "prefix_start": 1350,
+    "prefix_end": 2250,
+    "var_start": 2250,
+    "var_end": 3750,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 337,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_15.jsonl",
+    "resolution": "360p",
+    "prefix_start": 4050,
+    "prefix_end": 5400,
+    "var_start": 5400,
+    "var_end": 6400,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 450,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_20.jsonl",
+    "resolution": "360p",
+    "prefix_start": 8100,
+    "prefix_end": 9900,
+    "var_start": 9900,
+    "var_end": 11000,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 562,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_25.jsonl",
+    "resolution": "360p",
+    "prefix_start": 13500,
+    "prefix_end": 15750,
+    "var_start": 15750,
+    "var_end": 16750,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 675,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_30.jsonl",
+    "resolution": "360p",
+    "prefix_start": 20250,
+    "prefix_end": 22950,
+    "var_start": 22950,
+    "var_end": 23950,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 1012,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_45.jsonl",
+    "resolution": "360p",
+    "prefix_start": 28350,
+    "prefix_end": 32400,
+    "var_start": 32400,
+    "var_end": 33400,
+    "max_tokens": 100,
+    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
+    "warmup": 0
+  },
+  {
+    "num_groups": 1125,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
+    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_50.jsonl",
+    "resolution": "360p",
+    "prefix_start": 40500,
+    "prefix_end": 45000,
+    "var_start": 45000,
+    "var_end": 46000,
+    "max_tokens": 100,
     "model": "Qwen/Qwen2.5-VL-32B-Instruct",
     "warmup": 0
   },
   {
     "num_groups": 1350,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_30.jsonl",
-    "resolution": "720p",
-    "prefix_start": 5400,
-    "prefix_end": 8100,
-    "var_start": 8100,
-    "var_end": 13500,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 1800,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_40.jsonl",
-    "resolution": "720p",
-    "prefix_start": 13500,
-    "prefix_end": 17100,
-    "var_start": 17100,
-    "var_end": 24300,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 2250,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_50.jsonl",
-    "resolution": "720p",
-    "prefix_start": 24300,
-    "prefix_end": 28800,
-    "var_start": 28800,
-    "var_end": 37800,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 2700,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
     "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_60.jsonl",
-    "resolution": "720p",
-    "prefix_start": 37800,
-    "prefix_end": 43200,
-    "var_start": 43200,
-    "var_end": 54000,
-    "max_tokens": 50,
+    "resolution": "360p",
+    "prefix_start": 46000,
+    "prefix_end": 51400,
+    "var_start": 51400,
+    "var_end": 52400,
+    "max_tokens": 100,
     "model": "Qwen/Qwen2.5-VL-32B-Instruct",
     "warmup": 0
   },
   {
-    "num_groups": 3150,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
+    "num_groups": 1575,
+    "requests_per_group": 4,
+    "prefix_image_choices": [6],
+    "var_image_choices": [2],
     "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_70.jsonl",
-    "resolution": "720p",
-    "prefix_start": 54000,
-    "prefix_end": 60300,
-    "var_start": 60300,
-    "var_end": 72900,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 3600,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_80.jsonl",
-    "resolution": "720p",
-    "prefix_start": 72900,
-    "prefix_end": 80100,
-    "var_start": 80100,
-    "var_end": 94500,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 4050,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_90.jsonl",
-    "resolution": "720p",
-    "prefix_start": 94500,
-    "prefix_end": 102600,
-    "var_start": 102600,
-    "var_end": 118800,
-    "max_tokens": 50,
-    "model": "Qwen/Qwen2.5-VL-32B-Instruct",
-    "warmup": 0
-  },
-  {
-    "num_groups": 4500,
-    "requests_per_group": 2,
-    "prefix_image_choices": [
-      2
-    ],
-    "var_image_choices": [
-      2
-    ],
-    "output_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_100.jsonl",
-    "resolution": "720p",
-    "prefix_start": 118800,
-    "prefix_end": 127800,
-    "var_start": 127800,
-    "var_end": 145800,
-    "max_tokens": 50,
+    "resolution": "360p",
+    "prefix_start": 52400,
+    "prefix_end": 58700,
+    "var_start": 58700,
+    "var_end": 59700,
+    "max_tokens": 100,
     "model": "Qwen/Qwen2.5-VL-32B-Instruct",
     "warmup": 0
   }

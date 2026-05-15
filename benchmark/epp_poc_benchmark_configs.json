@@ -1,0 +1,82 @@
+[
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_5.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_5.jsonl",
+    "rps": 5,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_10.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_10.jsonl",
+    "rps": 10,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_15.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_15.jsonl",
+    "rps": 15,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_20.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_20.jsonl",
+    "rps": 20,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_25.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_25.jsonl",
+    "rps": 25,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_30.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_30.jsonl",
+    "rps": 30,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_45.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_45.jsonl",
+    "rps": 45,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_50.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_50.jsonl",
+    "rps": 50,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_60.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_60.jsonl",
+    "rps": 60,
+    "duration": 90,
+    "warmup": 0
+  },
+  {
+    "api_url": "http://35.208.188.17:80/v1/chat/completions",
+    "input_file": "/Users/xiyue/mm-experiments/datasets/datasets_rate_70.jsonl",
+    "output_file": "/Users/xiyue/mm-experiments/benchmark/epp-poc/rate_70.jsonl",
+    "rps": 70,
+    "duration": 90,
+    "warmup": 0
+  }
+]

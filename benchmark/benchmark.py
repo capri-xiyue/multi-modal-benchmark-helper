@@ -150,7 +150,10 @@ async def main(api_url, input_file, output_file, requests_per_second, warmup_req
     # Per-request timeout for heavy vision tasks (configurable via --timeout)
     timeout = aiohttp.ClientTimeout(total=request_timeout)
 
-    async with aiohttp.ClientSession(timeout=timeout) as session:
+    # Disable connection limit to allow high RPS under high latency
+    connector = aiohttp.TCPConnector(limit=0)
+
+    async with aiohttp.ClientSession(connector=connector, timeout=timeout) as session:
 
         # --- WARM-UP PHASE ---
         if warmups_to_send > 0:
