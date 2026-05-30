@@ -89,7 +89,12 @@ def main():
         "and output the findings as a JSON list.", "and write a brief descriptive narrative."
     ]
 
-    prompts = [f"{a} {s} {c}" for a, s, c in itertools.product(actions, subjects, contexts)]
+    prompts = []
+    for a, s, c in itertools.product(actions, subjects, contexts):
+        combined = f"{a} {s} {c}"
+        words = combined.split()
+        random.shuffle(words)
+        prompts.append(" ".join(words))
 
     print(f"Successfully generated {len(prompts)} unique prompts. Generating benchmark file...")
 

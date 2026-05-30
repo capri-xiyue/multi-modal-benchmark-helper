@@ -76,8 +76,8 @@ def main():
     parser.add_argument("--height", type=int, default=360, help="Custom image height (default: 360)")
     parser.add_argument("--max_tokens", type=int, default=1, help="Max output token")
     parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-VL-7B-Instruct", help="Model name")
-    parser.add_argument("--warmup", type=int, default=1,
-                        help="Number of warmup requests to send (default: 1)")
+    parser.add_argument("--warmup", type=int, default=20,
+                        help="Number of warmup requests to send (default: 20)")
 
 
     args = parser.parse_args()
@@ -141,7 +141,12 @@ def main():
         "and output the findings as a JSON list.", "and write a brief descriptive narrative."
     ]
 
-    prompts = [f"{a} {s} {c}" for a, s, c in itertools.product(actions, subjects, contexts)]
+    prompts = []
+    for a, s, c in itertools.product(actions, subjects, contexts):
+        combined = f"{a} {s} {c}"
+        words = combined.split()
+        random.shuffle(words)
+        prompts.append(" ".join(words))
 
     print(f"Successfully generated {len(prompts)} unique prompts. Generating benchmark file...")
 

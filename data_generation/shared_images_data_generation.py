@@ -7,57 +7,88 @@ import itertools
 import concurrent.futures
 import time
 import ssl
+import string
+import struct
+import os
+import tempfile
+import shutil
 
-# Disable SSL verification to work around corporate MITM certificate interception.
-_SSL_CTX = ssl.create_default_context()
-_SSL_CTX.check_hostname = False
-_SSL_CTX.verify_mode = ssl.CERT_NONE
+def generate_random_image(width, height):
+    """Generates a random BMP image and returns its base64 string."""
+    row_size = (width * 3 + 3) & ~3
+    pixel_data_size = row_size * height
+    file_size = 54 + pixel_data_size
+    
+    # BMP Header (14 bytes) + DIB Header (40 bytes) = 54 bytesma
+    header = struct.pack(
+        '<2sIHHIIiiHHIIIIII',
+        b'BM',          # Magic number (2s)
+        file_size,      # File size (I)
+        0, 0,           # Reserved (H, H)
+        54,             # Offset to pixel data (I)
+        40,             # Header size (I)
+        width,          # Width (i)
+        height,         # Height (i)
+        1,              # Planes (H)
+        24,             # Bits per pixel (H)
+        0,              # Compression (I)
+        pixel_data_size,# Image size (I)
+        2835, 2835,     # Pixels per meter (I, I)
+        0,              # Palette colors (I)
+        0               # Important colors (I)
+    )
+    
+    # Generate random pixels extremely fast using a single call to random.randbytes
+    # The padding bytes at the end of each row can be random as well per BMP spec.
+    pixels = random.randbytes(row_size * height)
+        
+    bmp_data = header + pixels
+    return base64.b64encode(bmp_data).decode('utf-8')
 
-def fetch_and_encode(url, label):
-    """Downloads an image and returns its base64 string."""
-    try:
-        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-        with urllib.request.urlopen(req, timeout=15, context=_SSL_CTX) as response:
-            return base64.b64encode(response.read()).decode('utf-8')
-    except Exception as e:
-        print(f"Failed to fetch {label}: {e}")
-        return None
 
-def fetch_batch(start_idx, end_idx, label_prefix, width, height):
-    """Fetches a batch of images concurrently at the specified resolution."""
-    urls_and_labels = [
-        (f"https://picsum.photos/{width}/{height}?random={i}", f"{label_prefix} {i}")
-        for i in range(start_idx, end_idx)
-    ]
+# Define a corpus of words for prompt generation
+word_corpus = [
+    "the", "quick", "brown", "fox", "jumps", "over", "lazy", "dog", "happy", "sad",
+    "running", "swiftly", "through", "forest", "under", "bright", "sun", "shining",
+    "stars", "moon", "night", "clear", "blue", "sky", "clouds", "floating", "gentle",
+    "breeze", "blowing", "leaves", "trees", "whispering", "secrets", "river", "flowing",
+    "ocean", "waves", "crashing", "sandy", "shore", "shell", "treasure", "hidden",
+    "deep", "cave", "mountain", "climbing", "high", "peak", "snowy", "cold", "warm",
+    "cozy", "fireplace", "crackling", "wood", "cabin", "peaceful", "valley", "green",
+    "grass", "flowers", "blooming", "colorful", "garden", "butterfly", "fluttering",
+    "bird", "singing", "sweet", "melody", "morning", "dew", "sparkling", "diamond",
+    "golden", "light", "shadows", "dancing", "wall", "clock", "ticking", "time",
+    "passing", "quietly", "silent", "thought", "dream", "adventure", "journey",
+    "map", "compass", "path", "winding", "road", "city", "lights", "bustling", "streets",
+    "ancient", "bridge", "castle", "kingdom", "shadow", "whisper", "echo", "thunder",
+    "lightning", "storm", "rain", "puddle", "rainbow", "foggy", "misty", "drizzle",
+    "glowing", "ember", "flame", "smoke", "ash", "dust", "windy", "stormy", "tempest",
+    "tornado", "hurricane", "blizzard", "desert", "dune", "cactus", "oasis", "mirage",
+    "canyon", "cliff", "ravine", "waterfall", "lake", "pond", "stream", "creek",
+    "meadow", "pasture", "field", "forest", "jungle", "swamp", "marsh", "bog",
+    "tundra", "glacier", "iceberg", "snowflake", "frosty", "chilly", "breezy", "gusty",
+    "sunny", "cloudy", "overcast", "gloomy", "cheerful", "joyful", "playful", "merry",
+    "lively", "energetic", "calm", "serene", "tranquil", "placid", "still", "quiet",
+    "noisy", "loud", "clamorous", "gentle", "soft", "smooth", "rough", "rugged",
+    "steep", "flat", "level", "wide", "broad", "narrow", "tight", "loose",
+    "heavy", "light", "swift", "slow", "rapid", "quick", "speedy", "leisurely"
+]
 
-    results = []
-    with concurrent.futures.ThreadPoolExecutor(max_workers=30) as executor:
-        future_to_url = {executor.submit(fetch_and_encode, url, label): label for url, label in urls_and_labels}
-
-        for future in concurrent.futures.as_completed(future_to_url):
-            result = future.result()
-            if result:
-                results.append(result)
-
-    return results
+def generate_random_sentence():
+    length = random.randint(10, 25)
+    words = random.choices(word_corpus, k=length)
+    return " ".join(words).capitalize() + "."
 
 def main():
     parser = argparse.ArgumentParser(description="Generate a visual LLM benchmark dataset with shared (but not necessarily prefix) images.")
-    parser.add_argument("--shared_start", type=int, default=0, help="Shared pool start index")
-    parser.add_argument("--shared_end", type=int, default=500, help="Shared pool end index")
-    parser.add_argument("--unique_start", type=int, default=500, help="Unique pool start index")
-    parser.add_argument("--unique_end", type=int, default=1500, help="Unique pool end index")
-    parser.add_argument("--num_groups", type=int, default=100, help="Number of image sharing groups")
-    parser.add_argument("--requests_per_group", type=int, default=5, help="Number of requests that share the same set of images")
+    parser.add_argument("--shared_ratio", type=float, default=2.0, help="Number of times each image is shared across requests.")
     parser.add_argument("--output_file", type=str, default="shared_images_benchmark.jsonl", help="Path to save the JSONL file")
-
-    parser.add_argument("--shared_image_choices", nargs='+', type=int, default=[1, 2], help="Number of shared images per request")
-    parser.add_argument("--unique_image_choices", nargs='+', type=int, default=[1], help="Number of unique images per request")
-
+    parser.add_argument("--duration", type=int, default=30, help="Duration of the benchmark in seconds")
+    parser.add_argument("--rps", type=int, default=10, help="Requests per second")
     parser.add_argument("--resolution", type=str, choices=["180p", "360p", "720p", "1080p"], default="360p")
-    parser.add_argument("--max_tokens", type=int, default=128, help="Max output tokens")
-    parser.add_argument("--model", type=str, default="Qwen/Qwen2.5-VL-7B-Instruct", help="Model name")
-    parser.add_argument("--warmup", type=int, default=20, help="Number of warmup requests to send (default: 20)")
+    parser.add_argument("--max_tokens", type=int, default=1, help="Max output tokens")
+    parser.add_argument("--model", type=str, default="qwen/Qwen2.5-VL-7B-Instruct", help="Model name")
+    parser.add_argument("--warmup", type=int, default=10, help="Number of warmup requests to send (default: 10)")
 
     args = parser.parse_args()
 
@@ -68,42 +99,31 @@ def main():
         "1080p": (1920, 1080)
     }
     width, height = resolution_map[args.resolution]
+    total_requests = args.duration * args.rps
+    
+    # Determine how many unique images we need
+    num_unique_images = max(1, int(total_requests / args.shared_ratio))
+    print(f"Generating {num_unique_images} unique random images in memory...")
+    
+    print(f"Starting concurrent generation with ThreadPoolExecutor...")
+    unique_images = [None] * num_unique_images
+    def generate_and_store_image(image_idx):
+        unique_images[image_idx] = generate_random_image(width, height)
 
-    print(f"Downloading {args.shared_end - args.shared_start} Shared images...")
-    shared_pool = fetch_batch(args.shared_start, args.shared_end, "Shared", width, height)
-
-    print(f"Downloading {args.unique_end - args.unique_start} Unique images...")
-    unique_pool = fetch_batch(args.unique_start, args.unique_end, "Unique", width, height)
-
-    if not shared_pool or not unique_pool:
-        print("Error: Failed to fetch images.")
-        exit()
-
-    actions = ["Compare", "Identify", "Analyze", "Describe", "Evaluate"]
-    subjects = ["the main objects", "the color palettes", "the lighting", "the background"]
-    contexts = ["across all images.", "focusing on differences.", "in the provided context."]
-    prompts = [f"{a} {s} {c}" for a, s, c in itertools.product(actions, subjects, contexts)]
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        futures = [executor.submit(generate_and_store_image, idx) for idx in range(num_unique_images)]
+        for progress_idx, future in enumerate(concurrent.futures.as_completed(futures)):
+            future.result()
+            if (progress_idx + 1) % max(1, num_unique_images // 10) == 0 or progress_idx == num_unique_images - 1:
+                print(f"Generated {progress_idx + 1}/{num_unique_images} images concurrently...")
 
     warmup_requests = []
     
     # --- GENERATE WARM-UP REQUESTS ---
     print(f"Generating {args.warmup} warm-up requests...")
     for _ in range(args.warmup):
-        # Pick images from pools for warmup
-        num_shared = random.choice(args.shared_image_choices)
-        w_shared_images = random.sample(shared_pool, min(num_shared, len(shared_pool)))
-        
-        num_unique = random.choice(args.unique_image_choices)
-        w_unique_images = random.sample(unique_pool, min(num_unique, len(unique_pool)))
-
-        components = []
-        for b64 in w_shared_images:
-            components.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
-        for b64 in w_unique_images:
-            components.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
-        components.append({"type": "text", "text": random.choice(prompts)})
-        
-        random.shuffle(components)
+        sentence = generate_random_sentence()
+        components = [{"type": "text", "text": sentence}]
 
         warmup_requests.append({
             "model": args.model,
@@ -111,48 +131,50 @@ def main():
             "max_tokens": args.max_tokens,
             "temperature": 0.7
         })
+    all_images = unique_images * int(args.shared_ratio)
+    
+    random.shuffle(all_images)
 
     main_requests = []
+    num_requests = args.duration * args.rps
+    for i in range(num_requests):            
+        sentence = generate_random_sentence()
+        # Store request metadata with the image index to keep memory extremely low
+        main_requests.append({
+            "sentence": sentence,
+            "image_index": i % num_unique_images
+        })
+
+    # Shuffle the requests - since they don't contain the heavy image payloads, this is extremely fast and memory-efficient
+    random.shuffle(main_requests)
     
-    for group_id in range(args.num_groups):
-        # Pick the set of images that will be shared across this group of requests
-        num_shared = random.choice(args.shared_image_choices)
-        group_shared_images = random.sample(shared_pool, min(num_shared, len(shared_pool)))
-
-        for _ in range(args.requests_per_group):
-            num_unique = random.choice(args.unique_image_choices)
-            request_unique_images = random.sample(unique_pool, min(num_unique, len(unique_pool)))
-
-            # Create components: images and one text prompt
-            components = []
-            for b64 in group_shared_images:
-                components.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
+    print(f"Writing requests incrementally to '{args.output_file}'...")
+    with open(args.output_file, "w", encoding="utf-8") as f:
+        # Write warm-up requests first
+        for req in warmup_requests:
+            f.write(json.dumps(req) + "\n")
             
-            for b64 in request_unique_images:
-                components.append({"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{b64}"}})
+        # Load images from memory and write the main requests
+        for idx, req_meta in enumerate(main_requests):
+            img_base64 = unique_images[req_meta["image_index"]]
             
-            components.append({"type": "text", "text": random.choice(prompts)})
-
-            # Shuffling the components ensures the shared images are not always at the beginning
-            random.shuffle(components)
-
+            components = [
+                {"type": "text", "text": req_meta["sentence"]},
+                {"type": "image_url", "image_url": {"url": f"data:image/bmp;base64,{img_base64}"}}
+            ]
+            
             request = {
                 "model": args.model,
                 "messages": [{"role": "user", "content": components}],
                 "max_tokens": args.max_tokens,
                 "temperature": 0.7
             }
-            main_requests.append(request)
+            f.write(json.dumps(request) + "\n")
+            
+            if (idx + 1) % max(1, num_requests // 10) == 0 or idx == num_requests - 1:
+                print(f"Wrote {idx + 1}/{num_requests} main requests...")
 
-    random.shuffle(main_requests)
-    
-    final_requests = warmup_requests + main_requests
-
-    with open(args.output_file, "w", encoding="utf-8") as f:
-        for req in final_requests:
-            f.write(json.dumps(req) + "\n")
-
-    print(f"Successfully saved {len(final_requests)} total requests ({args.warmup} warm-up + {len(main_requests)} main) to '{args.output_file}'.")
+    print(f"Successfully saved {args.warmup + num_requests} total requests ({args.warmup} warm-up + {num_requests} main) to '{args.output_file}'.")
 
 if __name__ == "__main__":
     main()
